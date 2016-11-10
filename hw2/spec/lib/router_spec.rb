@@ -30,12 +30,30 @@ RSpec.describe Router do
       expect(subject.call(env)).to eq [200, {}, ['post test']]
     end
   end
-  
+
   context 'when path not exist' do
     let(:env) { { 'REQUEST_PATH' => '/', 'REQUEST_METHOD' => 'GET'} }
-    
+
     it 'returns 404 page' do
       expect(subject.call(env)).to include 404
+    end
+  end
+
+  context 'when the path is presented dynamically' do
+    describe 'as string' do
+      let(:env) { { 'REQUEST_PATH' => '/post/about_ruby', 'REQUEST_METHOD' => 'GET'} }
+
+      it 'matches request' do
+        expect(subject.call(env)).to eq [200, {}, ['post show page']]
+      end
+    end
+
+    describe 'as number' do
+      let(:env) { { 'REQUEST_PATH' => '/post/45', 'REQUEST_METHOD' => 'GET'} }
+
+      it 'matches request' do
+        expect(subject.call(env)).to eq [200, {}, ['post show page']]
+      end
     end
   end
 end
