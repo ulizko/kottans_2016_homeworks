@@ -3,7 +3,6 @@ RSpec.describe Router do
     Router.new do
       get '/test', ->(env) { [200, {}, ['get test']] }
       post '/test', ->(env) { [200, {}, ['post test']] }
-
       ##
       # TODO: router should match path by pattern like
       # Pattern: /posts/:name
@@ -29,6 +28,14 @@ RSpec.describe Router do
 
     it 'matches request' do
       expect(subject.call(env)).to eq [200, {}, ['post test']]
+    end
+  end
+  
+  context 'when path not exist' do
+    let(:env) { { 'REQUEST_PATH' => '/', 'REQUEST_METHOD' => 'GET'} }
+    
+    it 'returns 404 page' do
+      expect(subject.call(env)).to include 404
     end
   end
 end
